@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    image: subtitle-proofreader
+    container_name: subtitle-proofreader
+    ports:
+      - "8000:8000"
+    volumes:
+      # 缓存 pip 下载，容器重启时依赖安装更快
+      - pip-cache:/root/.cache/pip
+    restart: unless-stopped
+
+volumes:
+  pip-cache:
