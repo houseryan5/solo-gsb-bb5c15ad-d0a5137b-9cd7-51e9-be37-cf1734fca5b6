@@ -1,0 +1,26 @@
+services:
+  api:
+    build: ./backend
+    container_name: subtitle-proof-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+
+  web:
+    build: ./frontend
+    container_name: subtitle-proof-web
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_TARGET: http://api:8000
+    depends_on:
+      - api
